@@ -31,7 +31,7 @@ put everything in values into the CRD. You can find an example in ```./config/sa
 
 ### Building the operator image
 
-```make docker-build docker-push IMG=aloisreitbauer/helloperator:latest```
+```make docker-build docker-push IMG=yogeek/helloperator:latest```
 
 ### Installing the 'Helloserver' Custom Resource Definition (CRD)
 
@@ -39,7 +39,7 @@ put everything in values into the CRD. You can find an example in ```./config/sa
 
 ### Installing the operator
 
-```make deploy IMG=aloisreitbauer/helloperator:latest```
+```make deploy IMG=yogeek/helloperator:latest```
 
 ### Installing the 'Helloserver' Custom Resource (CR)
 
