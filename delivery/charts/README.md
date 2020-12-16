@@ -5,6 +5,12 @@
 * Kubernetes 1.9+
 * Requires at least Helm v3.0.0
 
+If you do not have Helm 3 installed :
+
+```
+./setup/install.sh
+```
+
 ## Installing the Chart
 
 The chart is currently available via Git in a local directory. To install the
@@ -13,6 +19,12 @@ sub-directory. Then run
 
 ```
 helm install hs hello-server
+```
+
+or (better because idempotent):
+
+```
+helm upgrade -i hs hello-server
 ```
 
 This will install the _hello-server_ chart under the name `hs`.
@@ -49,8 +61,8 @@ The installation can be customized by changing the following paramaters:
 
 To update the application version, you can choose one of the following methods :
 
-- update the `image.tag` value in `values.yaml` (set the value to `v0.1.1`) and run `helm upgrade hs hello-server`
-- run `helm upgrade hs hello-server --set image.tag=v0.1.1`
+- update the `image.tag` value in `values.yaml` (set the value to `v0.1.1`) and run `helm upgrade -i hs hello-server` again
+- run `helm upgrade -i hs hello-server --set image.tag=v0.1.1`
 
 A new revision is then installed.
 

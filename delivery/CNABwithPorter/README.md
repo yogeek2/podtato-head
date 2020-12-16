@@ -1,4 +1,12 @@
-# CNAB over an airgap
+# Porter
+
+## Install
+
+```
+./setup/install.sh
+```
+
+## CNAB over an airgap
 
 1. Make any changes necessary to your bundle's source files and build it.
 
