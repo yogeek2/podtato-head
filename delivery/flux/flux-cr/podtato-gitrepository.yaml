@@ -7,4 +7,4 @@ spec:
   interval: 1m0s
   ref:
     branch: training
-  url: https://github.com/yogeek/podtatohead
+  url: https://github.com/yogeek2/podtatohead

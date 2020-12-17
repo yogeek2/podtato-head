@@ -34,7 +34,7 @@ _cf. "Bootstrap Flux into the cluster" at the end of this file._
 
 ```
 # Replace by your username to point to YOUR fork of the "podtatohead" project
-export GITHUB_USER="yogeek" 
+export GITHUB_USER="yogeek2" 
 
 flux create source git podtato \
   --url="https://github.com/${GITHUB_USER}/podtatohead" \
@@ -198,7 +198,7 @@ cd ${GITHUB_REPO}
 
 ```
 flux create source git podtatohead \
-  --url=https://github.com/yogeek/podtatohead \
+  --url=https://github.com/yogeek2/podtatohead \
   --branch=master \
   --interval=30s \
   --export > ./manifests/podtatohead/source.yaml
