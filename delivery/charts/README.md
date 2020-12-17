@@ -1,9 +1,17 @@
-# Hello Server Helm Chart
+# Potata Head Helm Chart
+
+_NOTE : you have to be into `delivery/charts` folder to run the commands below._
 
 ## Pre Requisites
 
 * Kubernetes 1.9+
 * Requires at least Helm v3.0.0
+
+If you do not have Helm 3 installed :
+
+```
+./setup/install.sh
+```
 
 ## Installing the Chart
 
@@ -12,17 +20,32 @@ chart first checkout the source code, open a terminal, and move to the delivery
 sub-directory. Then run
 
 ```
-helm install hs hello-server
+helm upgrade --install ph podtatohead -n podtato-helm --create-namespace --wait --timeout 20s
 ```
 
-This will install the _hello-server_ chart under the name `hs`.
+This will install the _podtatohead_ chart under the name `hs`.
+
+```
+helm ls -n podtato-helm
+```
+
+You can view it in your browser:
+
+* either by using `./exposeService.sh`
+* or by getting its external IP (if service has been set to 'type=LoadBalancer' in `values.yaml`) :
+
+```
+SVC_IP=$(kubectl -n podtato-helm get service hs-podtatohead -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+SVC_PORT=$(kubectl -n podtato-helm get service hs-podtatohead -o jsonpath='{.spec.ports[0].port}')
+xdg-open http://${SVC_IP}:${SVC_PORT}
+```
 
 The installation can be customized by changing the following paramaters:
 
 | Parameter                       | Description                                                     | Default                      |
 | ------------------------------- | ----------------------------------------------------------------| -----------------------------|
 | `replicaCount`                  | Number of replicas of the container                             | `1`                          |
-| `image.repository`              | Podtato Head Container image name                               | `aloisreitbauer/hello-server`|
+| `image.repository`              | Podtato Head Container image name                               | `yogeek/podtatohead`|
 | `image.tag`                     | Podtato Head image tag                                          | `v0.1.2`                     |
 | `image.pullPolicy`              | Podtato Head Container pull policy                              | `IfNotPresent`               |
 | `imagePullSecrets`              | Podtato Head Pod pull secret                                    | ``                           |
@@ -49,10 +72,21 @@ The installation can be customized by changing the following paramaters:
 
 To update the application version, you can choose one of the following methods :
 
-- update the `image.tag` value in `values.yaml` (set the value to `v0.1.1`) and run `helm upgrade hs hello-server`
-- run `helm upgrade hs hello-server --set image.tag=v0.1.1`
+* update the `image.tag` value in `values.yaml` (set the value to `v0.1.1`) and run `helm upgrade -i ph podtatohead` again
+* run `helm upgrade -i ph podtatohead -n podtato-helm --set image.tag=v0.1.1 --wait --timeout 20s`
 
 A new revision is then installed.
+
+You can view it in your browser :
+
+* either by using `./exposeService.sh`
+* or by getting its external IP (if service has been set to 'type=LoadBalancer' in `values.yaml`) :
+
+```
+SVC_IP=$(kubectl -n podtato-helm get service hs-podtatohead -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+SVC_PORT=$(kubectl -n podtato-helm get service hs-podtatohead -o jsonpath='{.spec.ports[0].port}')
+xdg-open http://${SVC_IP}:${SVC_PORT}
+```
 
 ## Rollback to a previous version
 
@@ -60,19 +94,19 @@ To rollback to a previous revision, run :
 
 ```
 # Check revision history
-helm history hs
+helm history ph -n podtato-helm
 
 # Rollback to the revision 1
-helm rollback hs 1
+helm rollback ph 1 -n podtato-helm
 
 # Check the revision
-helm status hs
+helm status ph -n podtato-helm
 ```
 
 ## Uninstall the chart
 
 ```
-helm uninstall hs
+helm uninstall ph -n podtato-helm
 ```
 
 ## Notes

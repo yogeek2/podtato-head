@@ -1,0 +1,1 @@
+operator-sdk new podtato-operator --type=helm --helm-chart ../charts/podtatohead

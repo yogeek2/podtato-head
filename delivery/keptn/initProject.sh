@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PROJECT="pod-tato-head"
-IMAGE="aloisreitbauer/hello-server"
+IMAGE="yogeek/podtatohead"
 VERSION="$2"
 
 case "$1" in
@@ -11,20 +11,20 @@ case "$1" in
     keptn create project "${PROJECT}" --shipyard=./shipyard.yaml
     ;;
   "onboard-service")
-    echo "Onboarding keptn service helloservice in project ${PROJECT}"
-    keptn onboard service helloservice --project="${PROJECT}" --chart=helm-charts/helloserver
+    echo "Onboarding keptn service podtatohead in project ${PROJECT}"
+    keptn onboard service podtatohead --project="${PROJECT}" --chart=helm-charts/podtatohead
     ;;
   "first-deploy-service")
-    echo "Deploying keptn service helloservice in project ${PROJECT}"
-    keptn send event new-artifact --project="${PROJECT}" --service=helloservice --image="${IMAGE}" --tag=v0.1.1
+    echo "Deploying keptn service podtatohead in project ${PROJECT}"
+    keptn send event new-artifact --project="${PROJECT}" --service=podtatohead --image="${IMAGE}" --tag=v0.1.1
     ;;
   "deploy-service")
-    echo "Deploying keptn service helloservice in project ${PROJECT}"
-    echo keptn send event new-artifact --project="${PROJECT}" --service=helloservice --image="${IMAGE}" --tag=v"${VERSION}"
-    keptn send event new-artifact --project="${PROJECT}" --service=helloservice --image="${IMAGE}" --tag=v"${VERSION}"
+    echo "Deploying keptn service podtatohead in project ${PROJECT}"
+    echo keptn send event new-artifact --project="${PROJECT}" --service=podtatohead --image="${IMAGE}" --tag=v"${VERSION}"
+    keptn send event new-artifact --project="${PROJECT}" --service=podtatohead --image="${IMAGE}" --tag=v"${VERSION}"
     ;;    
   "upgrade-service")
-    echo "Upgrading keptn service helloservice in project ${PROJECT}"
-    keptn send event new-artifact --project="${PROJECT}" --service=helloservice --image="${IMAGE}" --tag=v0.1.2
+    echo "Upgrading keptn service podtatohead in project ${PROJECT}"
+    keptn send event new-artifact --project="${PROJECT}" --service=podtatohead --image="${IMAGE}" --tag=v0.1.2
     ;;
 esac

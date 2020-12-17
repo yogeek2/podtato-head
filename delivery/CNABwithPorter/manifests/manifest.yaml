@@ -6,21 +6,21 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: helloservice
+  name: podtatohead
   namespace: demospace  
 spec:
   selector:
     matchLabels:
-      app: helloservice
+      app: podtatohead
   template:
     metadata:
       labels:
-        app: helloservice
+        app: podtatohead
     spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: aloisreitbauer/hello-server:latest
+        image: yogeek/podtatohead:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 9000
@@ -31,11 +31,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: helloservice
+  name: podtatohead
   namespace: demospace
 spec:
   selector:
-    app: helloservice
+    app: podtatohead
   ports:
   - name: http
     port: 9000

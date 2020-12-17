@@ -21,11 +21,13 @@ curl -sL https://get.keptn.sh | sudo -E bash
 keptn version
 ```
 
-Install Keptn in your cluster :
+Install Keptn in your cluster (be patient, the installation process will take about 3-5 minutes):
 
 ```
 keptn install --endpoint-service-type=ClusterIP --use-case=continuous-delivery
 ```
+
+_WARNING_ : keptn does not seem to handle multiple kubeconfig merged in the KUBECONFIG variable. If you have an error, point you KUBECONFIG var to the kind cluster only : `export KUBECONFIG=/home/guillaume/.kind/config` and relaunch the previous command.
 
 Access Keptn UI :
 

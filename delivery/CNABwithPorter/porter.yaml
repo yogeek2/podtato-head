@@ -3,10 +3,10 @@
 # See https://porter.sh/author-bundles for documentation on how to configure your bundle
 # Uncomment out the sections below to take full advantage of what Porter can do!
 
-name: hello-server
+name: podtatohead
 version: 0.1.0
-description: "A porter file for the hello server"
-tag: aloisreitbauer/helloservice-porter
+description: "A porter file for the podtato server"
+tag: yogeek/podtatohead-porter
 
 # See https://porter.sh/custom-dockerfile/
 dockerfile: Dockerfile.tmpl
@@ -31,9 +31,9 @@ mixins:
 # See https://porter.sh/author-bundles/#images
 images:
   server: # v0.1.2
-    description: "The hello web server"
+    description: "The podtato web server"
     imageType: "docker"
-    repository: "aloisreitbauer/hello-server"
+    repository: "yogeek/podtatohead"
     digest: "sha256:3fe55b2bc6c9a31a2acdd7ee5c64cb076a267c11443d9bb12c1467272bf9af07"
 
 install:
@@ -41,39 +41,39 @@ install:
   # I wouldn't need this explicit step and could use `helm install ... --set` instead.
   # example: https://github.com/getporter/porter/blob/5164b602e9528a0259c3a93f6eea4f1cf225f897/examples/airgap/porter.yaml#L31-L39
   - exec:
-      description: "Update hello-server image with the relocated reference"
+      description: "Update podtatohead image with the relocated reference"
       command: ./helpers.sh
       arguments:
         - relocate
         - "{{bundle.images.server.repository}}@{{bundle.images.server.digest}}"
   - kubernetes:
-      description: "Install the hello server"
+      description: "Install the podtato server"
       manifests:
         - ./manifests
       wait: true
 
 upgrade:
   - exec:
-      description: "Update hello-server image with the relocated reference"
+      description: "Update podtatohead image with the relocated reference"
       command: ./helpers.sh
       arguments:
         - relocate
         - "{{bundle.images.server.repository}}@{{bundle.images.server.digest}}"
   - kubernetes:
-      description: "Install the hello server"
+      description: "Install the podtato server"
       manifests:
         - ./manifests
       wait: true
 
 uninstall:
   - exec:
-      description: "Update hello-server image with the relocated reference"
+      description: "Update podtatohead image with the relocated reference"
       command: ./helpers.sh
       arguments:
         - relocate
         - "{{bundle.images.server.repository}}@{{bundle.images.server.digest}}"
   - kubernetes:
-      description: "Uninstall the hello server"  
+      description: "Uninstall the podtato server"  
       manifests:
         - ./manifests
       wait: true

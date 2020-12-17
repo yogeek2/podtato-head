@@ -1,10 +1,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: {{ template "helloservice-demo.fullname" . }}
+  name: {{ template "podtatohead-demo.fullname" . }}
   labels:
-    app: {{ template "helloservice-demo.name" . }}
-    chart: {{ template "helloservice-demo.chart" . }}
+    app: {{ template "podtatohead-demo.name" . }}
+    chart: {{ template "podtatohead-demo.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
@@ -12,13 +12,13 @@ spec:
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: {{ template "helloservice-demo.name" . }}
+      app: {{ template "podtatohead-demo.name" . }}
       release: {{ .Release.Name }}
   strategy:
      canary:
     #blueGreen:
-      # activeService: {{ template "helloservice-demo.fullname" . }}
-      # previewService: {{ template "helloservice-demo.fullname" . }}-preview
+      # activeService: {{ template "podtatohead-demo.fullname" . }}
+      # previewService: {{ template "podtatohead-demo.fullname" . }}-preview
        steps:
        - setWeight: 20
        - pause: {}
@@ -31,7 +31,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "helloservice-demo.name" . }}
+        app: {{ template "podtatohead-demo.name" . }}
         release: {{ .Release.Name }}
     spec:
       containers:

@@ -28,11 +28,11 @@ Please follow the rest of the documentation to
 - [expose your the ArgoCD UI](https://argoproj.github.io/argo-cd/getting_started/#3-access-the-argo-cd-api-server)
 - [get access](https://argoproj.github.io/argo-cd/getting_started/#4-login-using-the-cli) by retrieving the password
 
-### Fork the podtato-head project
+### Fork the podtatohead project
 
 This example modifies files within the repository, so you will need your own
 fork. The original podtato head repository can be found
-[here](https://github.com/cncf/podtato-head)
+[here](https://github.com/cncf/podtatohead)
 
 ## Setting up the application in ArgoCD
 
@@ -63,7 +63,7 @@ have ArgoCD take care of namespace management.
 #### Setting the Github repo
 
 Use the Github repo you forked before and ensure you set the path to ```
-delivery/charts/hello-server```. This will use the Helm of the tutorial
+delivery/charts/podtatohead```. This will use the Helm of the tutorial
 
 ![Define GitHub Repo to use](images/argoGithub.png)
 
@@ -107,7 +107,7 @@ will see all application components as healthy.
 ### Updating the project to a new version
 
 Updating the project required to update the ```values``` file in the
-```/delivery/charts/hello-server/``` folder fo your Git
+```/delivery/charts/podtatohead/``` folder fo your Git
 repository. Change the ```tag``` value to ```v0.1.1```.
 
 The application will now show up as ```out of sync```. Simply hit ```sync``` and
