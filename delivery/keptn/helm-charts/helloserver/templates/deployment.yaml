@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: helloservice
+  name: podtatohead
   namespace: {{ .Release.Namespace }} 
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: helloservice
+      app: podtatohead
   template:
     metadata:
       labels:
-        app: helloservice
+        app: podtatohead
     spec:
       terminationGracePeriodSeconds: 5
       containers:

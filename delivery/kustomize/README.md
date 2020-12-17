@@ -17,10 +17,10 @@ Generate customized YAML with: `kustomize build <kustomization_yaml_file_dir>`
 
 Then, you can manage "variants" of a configuration (like development, staging and production) using overlays that modify a common base.
 
-## Deploy a simple base
+## Generate manifest from a simple base
 
 ```
-kustomize build base | kubectl apply -f -
+kustomize build base
 ```
 
 ## Deploy overlays for dev and prod variants
@@ -35,9 +35,9 @@ Check that resources have been created in `dev` namespace with corresponding lab
 kustomize build ./overlays/prod | kubectl apply -f -
 ```
 
-Check that resources have been created in `dev` namespace with corresponding labels : `kubectl get deploy,svc,hpa -n prod --show-labels`
+Check that resources have been created in `prod` namespace with corresponding labels : `kubectl get deploy,svc,hpa -n prod --show-labels`
 
-## Delete 
+## Delete
 
 ```
 kustomize build ./overlays/dev | kubectl delete -f -

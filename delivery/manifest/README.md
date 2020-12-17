@@ -1,5 +1,7 @@
 # Delivering the example using a plain manifest
 
+_NOTE : you have to be into `delivery/manifest` folder to run the commands below._
+
 ## Deploy
 
 Simply run
@@ -15,7 +17,7 @@ You can then access to the service depending on the Service type :
 - if `type=ClusterIP` :
 
 ```
-kucectl port-forward svc/helloservice 9000
+kucectl port-forward svc/podtatohead 9000
 ```
 
 Your app is running at : http://localhost:9000
@@ -26,7 +28,7 @@ Your app is running at : http://localhost:9000
 ./getIP.sh
 ```
 
-Your app is running at : http://<IP>:9000
+Your app is running at : http://[SVC_IP]:9000
 
 ## Update
 

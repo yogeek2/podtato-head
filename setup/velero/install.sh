@@ -7,7 +7,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 echo "---------------------------------------------------"
 echo "Installing Minio..."
 echo "---------------------------------------------------"
-kubectl apply -f https://raw.githubusercontent.com/vmware-tanzu/velero/main/examples/minio/00-minio-deployment.yaml
+kubectl apply -f https://raw.githubusercontent.com/vmware-tanzu/velero/main/examples/minio/00-minio-deployment.yaml --force
 echo "Patching minio service..."
 kubectl patch svc minio -p '{"spec":{"type":"LoadBalancer"}}' -n velero
 sleep 5

@@ -72,7 +72,7 @@ porter install
 Use the `--tag` to install a published bundle:
 
 ```
-porter install helloservice-demo --tag yogeek/helloservice-porter:v0.1.0
+porter install podtatohead-demo --tag yogeek/podtatohead-porter:v0.1.0
 ```
 
 ## Uninstalling the bundle
@@ -86,7 +86,7 @@ porter uninstall
 Uninstall using installation name:
 
 ```
-porter uninstall helloservice-demo
+porter uninstall podtatohead-demo
 ```
 
 \* When working with an installation from a published bundle, don't run porter commands

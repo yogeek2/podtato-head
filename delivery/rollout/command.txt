@@ -1,5 +1,5 @@
 kubectl argo rollouts list rollouts
 
-kubectl argo rollouts get rollout helloservice-rollout  -w
+kubectl argo rollouts get rollout podtatohead-demo  -w
 
-kubectl argo rollouts promote helloservice-rollout
+kubectl argo rollouts promote podtatohead-demo

@@ -1,0 +1,8 @@
+domain: podtatohead
+layout: helm.sdk.operatorframework.io/v1
+projectName: podtato-operator
+resources:
+- group: podtatohead-demo
+  kind: Podtato
+  version: v1alpha1
+version: 3-alpha

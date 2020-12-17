@@ -1,0 +1,9 @@
+apiVersion: podtatohead-demo.podtatohead/v1alpha1
+kind: Podtato
+metadata:
+  name: podtatohead-sample
+spec:
+  # Default values copied from <project_dir>/helm-charts/podtatohead/values.yaml
+  imageName: yogeek/podtatohead:v0.1.1
+  
+  

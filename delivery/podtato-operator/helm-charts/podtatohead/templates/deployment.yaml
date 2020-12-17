@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtatohead
+  namespace: {{ .Release.Namespace }} 
+spec:
+  selector:
+    matchLabels:
+      app: podtatohead
+  template:
+    metadata:
+      labels:
+        app: podtatohead
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: server
+        image: {{ .Values.imageName}}
+        ports:
+        - containerPort: 9000
+        env:
+        - name: PORT
+          value: "9000"
