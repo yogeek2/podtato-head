@@ -1,5 +1,7 @@
 # Delivery using [Flux](https://toolkit.fluxcd.io/get-started/)
 
+_NOTE : you have to be into `delivery/flux` folder to run the commands below._
+
 ## Install Flux
 
 ### Install CLI
@@ -28,18 +30,29 @@ flux install --arch=amd64
 _Note: In production, it is recommended to use the `bootstrap` mode to ensure the Flux manifests are also synched with a GIT repository._
 _cf. "Bootstrap Flux into the cluster" at the end of this file._
 
+### Check install
+
+```
+flux check
+```
+
 ## Register Git repositories and reconcile them on your cluster
 
-- [Create a git source](https://toolkit.fluxcd.io/cmd/flux_create_source_git/) pointing to a repository master branch:
+- [Create a git source](https://toolkit.fluxcd.io/cmd/flux_create_source_git/) pointing to a repository main branch:
 
 ```
 # Replace by your username to point to YOUR fork of the "podtatohead" project
-export GITHUB_USER="yogeek2" 
+export GITHUB_USER="yogeek" 
 
 flux create source git podtato \
-  --url="https://github.com/${GITHUB_USER}/podtatohead" \
-  --branch="training" \
+  --url="https://github.com/${GITHUB_USER}/podtato-head" \
+  --branch="main" \
   --interval=1m
+```
+
+A `GitRepository` Custom Resource has been created:
+```
+kubectl get gitrepositories.source.toolkit.fluxcd.io -n flux-system
 ```
 
 - [Create a kustomization](https://toolkit.fluxcd.io/cmd/flux_create_kustomization/) for synchronizing manifests on the cluster:
@@ -54,6 +67,11 @@ flux create kustomization podtato \
   --health-check-timeout=2m
 ```
 
+A `Kustomization` Custom Resource has been created:
+```
+kubectl get kustomizations.kustomize.toolkit.fluxcd.io -n flux-system
+```
+
 - In about 30s the synchronization should start:
 
 ```
@@ -66,20 +84,20 @@ watch flux get kustomizations
 kubectl -n demospace get deployments,services
 ```
 
-You can see you app with either its service IP (or with port-forward):
+You can see you app with its service IP (or with port-forward if you do have a load-balancer):
 
 ```
-./getIP.sh
+SVC_IP=$(kubectl -n demospace get service podtatohead -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+SVC_PORT=$(kubectl -n demospace get service podtatohead -o jsonpath='{.spec.ports[0].port}')
+xdg-open http://${SVC_IP}:${SVC_PORT}
 ```
 
-Your app is running at : http://[SVC_IP]:9000
-
-From now, any changes made to the Kubernetes manifests in the master branch will be synchronised with the cluster !
+From now, any changes made to the Kubernetes manifests in the main branch will be synchronised with the cluster !
 
 - Try to update your source code :
 
 ```
-# vim delivery/manifest/manifest.yaml
+# vim ../manifest/manifest.yaml
 # Update the image version (reminder: existing tags are 0.1.0, 0.1.1, 0.1.2)
 
 # Commit and push your modification
@@ -93,6 +111,21 @@ watch flux get kustomizations
 ```
 
 Refresh you app page in the browser !
+
+**Note**: Even if it is easier to use `flux create` to deploy all Flux objects, the best practice is of course to store the YAML corresponding to these resources in GIT.
+To see the manifest for each object, you can use `--export` option or also use the `flux export` command on an existing resource :
+
+```
+flux create source git podtato \
+  --url="https://github.com/${GITHUB_USER}/podtato-head" \
+  --branch="main" \
+  --interval=1m \
+  --export
+
+flux export source git podtato
+```
+
+You can see the resulting files in `./flux-cr/kustomization/` directory.
 
 ## Reconciliation details
 
@@ -118,7 +151,11 @@ flux delete source git podtato
 
 ## Register Helm repositories and create Helm releases
 
-FLux can also manage Helm repositories :
+https://toolkit.fluxcd.io/guides/helmreleases/
+
+To be able to release a Helm chart, the source that contains the chart (either a HelmRepository, GitRepository, or Bucket) has to be known first to the [source-controller](https://toolkit.fluxcd.io/components/source/controller/), so that the HelmRelease can reference to it.
+
+## Helm release from HelmRepository
 
 ```
 flux create source helm bitnami \
@@ -127,32 +164,59 @@ flux create source helm bitnami \
 
 flux create helmrelease nginx \
   --interval=1h \
-  --release-name=nginx-ingress-controller \
-  --target-namespace=kube-system \
+  --release-name=nginx \
+  --target-namespace=default \
   --source=HelmRepository/bitnami \
-  --chart=nginx-ingress-controller \
-  --chart-version="5.x.x"
+  --chart=nginx \
+  --chart-version="8.x.x"
 ```
 
-In our case, the cart is in a Git Repository, so we can register a GitRepository source like this :
+You now have deployed the `bitnami/nginx` helm chart from the bitnami helm repository.
 
 ```
-flux create source git podtato-chart \
-  --url="https://github.com/${GITHUB_USER}/podtatohead" \
-  --branch="training" \
-  --interval=1m
-
-flux create helmrelease nginx \
-  --interval=1h \
-  --release-name=nginx-ingress-controller \
-  --target-namespace=kube-system \
-  --source=HelmRepository/bitnami \
-  --chart=nginx-ingress-controller \
-  --chart-version="5.x.x"
+helm ls
 ```
+
+Check the nginx service :
+```
+SVC_IP=$(kubectl -n default get service nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')  
+SVC_PORT=$(kubectl -n default get service nginx -o jsonpath='{.spec.ports[0].port}')  
+xdg-open http://${SVC_IP}:${SVC_PORT}
+```
+
+Delete the resources:
+
+```
+flux delete helmrelease nginx
+flux delete source helm bitnami
+```
+
+## Helm release from GitRepository
+
+In our case, the chart is in a Git repo, so we can register a GitRepository source like this :
+
+```
+kubectl apply -f ./flux-cr/helm/podtato-chart-gitrepository.yaml
+```
+
+And then define a new HelmRelease to release the Helm chart:
+
+```
+kubectl apply -f ./flux-cr/helm/podtato-helmrelease.yaml
+```
+
+The [helm-controller](https://toolkit.fluxcd.io/components/helm/controller/) will then create a new HelmChart resource in the same namespace as the sourceRef.
+
+You can check the resulting Custom Resources:
+
+```
+kubectl get gitrepository.source.toolkit.fluxcd.io,helmrelease.helm.toolkit.fluxcd.io,helmcharts.source.toolkit.fluxcd.io -A
 ```
 
 ### Bootstrap Flux into the cluster
+
+FLux itself should be deployed from a git repository to respect GitOps principles.
+To achieve this, Flux has a `boostrap` command.
 
 - Check you cluster :
 
@@ -186,36 +250,6 @@ The bootstrap command creates a repository if one doesn't exist, and commits the
 ```
 flux check
 ```
-
-- Clone the repository :
-
-```
-git clone https://github.com/${GITHUB_USER}/${GITHUB_REPO}
-cd ${GITHUB_REPO}
-```
-
-- Create a git source pointing to your repository master branch:
-
-```
-flux create source git podtatohead \
-  --url=https://github.com/yogeek2/podtatohead \
-  --branch=master \
-  --interval=30s \
-  --export > ./manifests/podtatohead/source.yaml
-```
-
-- Create a kustomization for synchronizing the manifests on the cluster:
-
-```
-flux create kustomization podtatohead \
-  --source=podtatohead \
-  --path="./delivery/manifest" \
-  --prune=true \
-  --validation=client \
-  --interval=1h \
-  --export > ./manifests/podtatohead/resources.yaml
-```
-
 
 ## Podinfo app
 
